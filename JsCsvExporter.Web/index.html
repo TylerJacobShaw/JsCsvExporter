@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="scripts/exporter.js"></script>
+</head>
+<body>
+    <button onclick="buildCSV()">Click</button>
+    <script>
+        function buildCSV() {
+            var todos = [
+                {
+                    "userId": 1,
+                    "id": 2,
+                    "title": "delectus aut autem",
+                    "completed": false
+                },
+                {
+                    "userId": 1,
+                    "id": 3,
+                    "title": "delectus aut autem",
+                    "completed": true
+                },
+                {
+                    "userId": 1,
+                    "id": 4,
+                    "title": "delectus aut autem",
+                    "completed": false
+                },
+
+            ];
+            var CSV = '';
+            var now = new Date();
+            var dateString = formatDate(now);
+            CSV += "Todays CSV Export" + '\r\n\n';
+            var row = "";
+            for (var index in todos[0]) {
+                var headerName = index.replace("count", "");
+                row += headerName + ',';
+            }
+            row = row.slice(0, -1);
+            CSV += row + '\r\n';
+            for (var i = 0; i < todos.length; i++) {
+                var row = "";
+                for (var index in todos[i]) {
+                    row += '"' + todos[i][index] + '",';
+                }
+                row.slice(0, row.length - 1);
+                CSV += row + '\r\n';
+            }
+            if (CSV == '') {
+                alert("Invalid data");
+                return;
+            }
+            var fileName = "todosData";
+            fileName += dateString.replace(/ /g, "_");
+            var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+            var link = document.createElement('a');
+            link.href = uri;
+            link.style = "visibility:hidden";
+            link.download = fileName + ".csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+        function formatDate(date) {
+            var monthNames = [
+                "January", "February", "March",
+                "April", "May", "June", "July",
+                "August", "September", "October",
+                "November", "December"
+            ];
+            var day = date.getDate();
+            var monthIndex = date.getMonth();
+            var year = date.getFullYear();
+
+            return day + ' ' + monthNames[monthIndex] + ' ' + year;
+        }
+    </script>
+</body>
+</html>
